@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'gds/provisioner/cli'
+require 'provisioner/cli'
 
 MOCK_TEMPLATE = {
   :puppetmaster => 'foo.bar.baz',

@@ -1,6 +1,6 @@
 require 'json'
 require 'optparse'
-require 'gds/provisioner/errors'
+require 'provisioner/errors'
 require 'highline/import'
 
 module Gds

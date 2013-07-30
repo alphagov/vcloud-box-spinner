@@ -1,4 +1,4 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in gds-provisioning.gemspec
+# Specify your gem's dependencies in vcloud-box-configurator.gemspec
 gemspec
