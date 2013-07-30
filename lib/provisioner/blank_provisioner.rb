@@ -1,7 +1,5 @@
-module Gds
-  module Provisioner
-    class BlankProvisioner < Provisioner
-      include ComputeNode
-    end
+module Provisioner
+  class BlankProvisioner < Provisioner
+    include ComputeNode
   end
 end

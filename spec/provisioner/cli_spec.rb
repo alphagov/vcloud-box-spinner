@@ -18,39 +18,39 @@ DEFAULTS = {
   :ssh_config  => true,         # if not specified, use system defaults
 }
 
-describe Gds::Provisioner::CLI do
+describe Provisioner::CLI do
   describe "#defaults" do
-    Gds::Provisioner::CLI.defaults.should ==  DEFAULTS
+    Provisioner::CLI.defaults.should ==  DEFAULTS
   end
 
   describe "#process" do
     it 'should set options from built-in defaults' do
-      res = Gds::Provisioner::CLI.process({}, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process({}, MOCK_TEMPLATE)
       res.should include(DEFAULTS)
     end
 
     it 'should set options from the vCloud config defaults' do
       config = { :default => { :ip => '5.6.7.8' } }
-      res = Gds::Provisioner::CLI.process(config, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process(config, MOCK_TEMPLATE)
       res.should include(:ip => '5.6.7.8')
     end
 
     it 'should set options from the vCloud config based on the specified zone' do
       config = { :foo => { :ip => '9.8.7.6' } }
-      res = Gds::Provisioner::CLI.process(config, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process(config, MOCK_TEMPLATE)
       res.should include(:ip => '9.8.7.6')
     end
 
     it 'should set options from the machine template' do
       tpl = MOCK_TEMPLATE.dup
       tpl[:ip] = '1.2.3.4'
-      res = Gds::Provisioner::CLI.process({}, tpl)
+      res = Provisioner::CLI.process({}, tpl)
       res.should include(:ip => '1.2.3.4')
     end
 
     it 'should set options from the command line' do
       opts = {:ssh_user => 'donald'}
-      res = Gds::Provisioner::CLI.process({}, MOCK_TEMPLATE, opts)
+      res = Provisioner::CLI.process({}, MOCK_TEMPLATE, opts)
       res.should include(:ssh_user => 'donald')
     end
 
@@ -59,7 +59,7 @@ describe Gds::Provisioner::CLI do
         :default => { :ip => '1.2.3.4' },
         :foo => { :ip => '5.6.7.8' }
       }
-      res = Gds::Provisioner::CLI.process(config, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process(config, MOCK_TEMPLATE)
       res.should include(:ip => '5.6.7.8')
     end
 
@@ -67,7 +67,7 @@ describe Gds::Provisioner::CLI do
       config = { :foo => { :ip => '1.2.3.4' } }
       tpl = MOCK_TEMPLATE.dup
       tpl[:ip] = '5.6.7.8'
-      res = Gds::Provisioner::CLI.process(config, tpl)
+      res = Provisioner::CLI.process(config, tpl)
       res.should include(:ip => '5.6.7.8')
     end
 
@@ -75,7 +75,7 @@ describe Gds::Provisioner::CLI do
       tpl = MOCK_TEMPLATE.dup
       tpl[:ssh_user] = 'aaron'
       opts = { :ssh_user => 'binky' }
-      res = Gds::Provisioner::CLI.process({}, MOCK_TEMPLATE, opts)
+      res = Provisioner::CLI.process({}, MOCK_TEMPLATE, opts)
       res.should include(:ssh_user => 'binky')
     end
 
@@ -86,7 +86,7 @@ describe Gds::Provisioner::CLI do
         :catalog_items => { :my_cool_template => 'incorrect' },
         :template_name => 'my_cool_template'
       )
-      res = Gds::Provisioner::CLI.process({}, tpl)
+      res = Provisioner::CLI.process({}, tpl)
       res.should include(:catalog_id => 'wibble')
     end
 
@@ -97,7 +97,7 @@ describe Gds::Provisioner::CLI do
         :catalog_items => { :my_cool_template => 'https://correct_catalog_id' },
         :template_name => 'my_cool_template'
       )
-      res = Gds::Provisioner::CLI.process({}, tpl)
+      res = Provisioner::CLI.process({}, tpl)
       res.should include(:catalog_id => 'https://correct_catalog_id')
     end
 
@@ -105,16 +105,16 @@ describe Gds::Provisioner::CLI do
       tpl = MOCK_TEMPLATE.dup
       tpl.delete(:zone)
       expect do
-        Gds::Provisioner::CLI.process({}, tpl)
-      end.to raise_error(Gds::Provisioner::ConfigurationError, /zone/)
+        Provisioner::CLI.process({}, tpl)
+      end.to raise_error(Provisioner::ConfigurationError, /zone/)
     end
 
     it 'should require a puppetmaster to be set' do
       tpl = MOCK_TEMPLATE.dup
       tpl.delete(:puppetmaster)
       expect do
-        Gds::Provisioner::CLI.process({}, tpl)
-      end.to raise_error(Gds::Provisioner::ConfigurationError, /puppetmaster/)
+        Provisioner::CLI.process({}, tpl)
+      end.to raise_error(Provisioner::ConfigurationError, /puppetmaster/)
     end
   end
 
@@ -123,7 +123,7 @@ describe Gds::Provisioner::CLI do
     after :each do silence_output end
 
     it "should fail if two arguments not provided" do
-      expect { Gds::Provisioner::CLI.new(['file1']).execute }.to raise_error(SystemExit)
+      expect { Provisioner::CLI.new(['file1']).execute }.to raise_error(SystemExit)
     end
   end
 

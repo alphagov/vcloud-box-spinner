@@ -4,7 +4,7 @@ require "provisioner/version"
 
 Gem::Specification.new do |s|
   s.name        = "vcloud-box-configurator"
-  s.version     = Gds::Provisioner::VERSION
+  s.version     = Provisioner::VERSION
   s.authors     = ["Garima Singh"]
   s.email       = ["igarimasingh@gmail.com"]
   s.homepage    = "https://github.gds/gds/vcloud-box-configurator"

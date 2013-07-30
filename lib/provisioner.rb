@@ -14,36 +14,34 @@ require 'erb'
 require 'parallel'
 require 'fog'
 
-module Gds
-  module Provisioner
-    PROVISIONERS = {
-      "client" => ClientProvisioner,
-      "master" => MasterProvisioner,
-      "blank"  => BlankProvisioner
-    }.freeze
+module Provisioner
+  PROVISIONERS = {
+    "client" => ClientProvisioner,
+    "master" => MasterProvisioner,
+    "blank"  => BlankProvisioner
+  }.freeze
 
-    def self.build options = {}
-      options[:logger] ||= default_logger options
-      options[:logger].debug "Building provisioner for #{options.inspect}"
-      provisioner = provisioner_for_role options[:role]
-      provisioner.new options
-    end
-
-    def self.provisioner_for_role role
-      return Provisioner if role.to_s == ""
-      return PROVISIONERS[role] if PROVISIONERS.key? role
-      raise Gds::Provisioner::NoSuchRole,
-        "I don't know how to provision the role `#{role}`"
-    end
-
-    class << self
-      attr_accessor :ssh_client
-    end
-    self.ssh_client = Net::SSH
-
-    def self.default_logger options
-      Logger.new(STDOUT).tap { |l| l.level = options[:log_level] || Logger::ERROR }
-    end
-
+  def self.build options = {}
+    options[:logger] ||= default_logger options
+    options[:logger].debug "Building provisioner for #{options.inspect}"
+    provisioner = provisioner_for_role options[:role]
+    provisioner.new options
   end
+
+  def self.provisioner_for_role role
+    return Provisioner if role.to_s == ""
+    return PROVISIONERS[role] if PROVISIONERS.key? role
+    raise Gds::Provisioner::NoSuchRole,
+      "I don't know how to provision the role `#{role}`"
+  end
+
+  class << self
+    attr_accessor :ssh_client
+  end
+  self.ssh_client = Net::SSH
+
+  def self.default_logger options
+    Logger.new(STDOUT).tap { |l| l.level = options[:log_level] || Logger::ERROR }
+  end
+
 end
