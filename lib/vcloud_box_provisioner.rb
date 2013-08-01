@@ -1,9 +1,7 @@
 require 'provisioner/errors'
 require 'provisioner/provisioner'
 require 'provisioner/compute_node'
-require 'provisioner/client_provisioner'
 require 'provisioner/blank_provisioner'
-require 'provisioner/master_provisioner'
 require 'provisioner/cli'
 require 'provisioner/version'
 require 'socket'
@@ -14,11 +12,9 @@ require 'erb'
 require 'parallel'
 require 'fog'
 
-module Provisioner
+module VcloudBoxProvisioner
   PROVISIONERS = {
-    "client" => ClientProvisioner,
-    "master" => MasterProvisioner,
-    "blank"  => BlankProvisioner
+    "blank"  => Provisioner::BlankProvisioner
   }.freeze
 
   def self.build options = {}
@@ -31,7 +27,7 @@ module Provisioner
   def self.provisioner_for_role role
     return Provisioner if role.to_s == ""
     return PROVISIONERS[role] if PROVISIONERS.key? role
-    raise Gds::Provisioner::NoSuchRole,
+    raise Provisioner::NoSuchRole,
       "I don't know how to provision the role `#{role}`"
   end
 

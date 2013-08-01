@@ -19,7 +19,4 @@ if [ $1 = "postcustomization" ]; then
   echo "nameserver 8.8.8.8" >/etc/resolv.conf
   echo "nameserver 8.8.4.4" >>/etc/resolv.conf
   apt-get install openssh-server
-
-  wget https://some-s3-url/puppet<%= options[:role] %>.sh -O /tmp/bootstrap.sh
-  . /tmp/bootstrap.sh
 fi

@@ -13,7 +13,7 @@ module Provisioner
         :num_cores   => 4,
         :num_servers => 1,
         :platform    => "production",
-        :role        => "client",
+        :role        => "blank",
         :ssh_config  => true,         # if not specified, use system defaults
       }.freeze
     end
@@ -46,10 +46,6 @@ module Provisioner
           raise ConfigurationError, 'You must specify catalog_id OR (catalog_items AND template_name)'
         end
         res[:catalog_id] = catalog_id
-      end
-
-      unless res.include? :puppetmaster
-        raise ConfigurationError, "You must specify a puppetmaster"
       end
 
       res
@@ -85,10 +81,6 @@ module Provisioner
         o.on("-F", "--ssh-config", "=FILENAME", "SSH config file(s) to use (can be specified multiple times)") do |v|
           options[:ssh_config] ||= []
           options[:ssh_config].push(v)
-        end
-
-        o.on("-s", "--ssh-user", "=NAME", "SSH username for puppetmaster") do |v|
-          options[:ssh_user] = v
         end
 
         o.on("-d", "--debug", "Enable debugging output") do

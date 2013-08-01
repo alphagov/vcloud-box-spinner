@@ -39,7 +39,7 @@ module Provisioner
 
     def modify_xml(url, mime_type)
       connection = compute.servers.service
-      xml = Nokogiri::XML(guest_customization_section = connection.request(:uri => url).body)
+      xml = Nokogiri::XML(connection.request(:uri => url).body)
       yield xml
       connection.request(:uri => url,
                                          :expects => 202,

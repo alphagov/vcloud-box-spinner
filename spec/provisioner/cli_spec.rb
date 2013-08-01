@@ -14,7 +14,7 @@ DEFAULTS = {
   :num_cores   => 4,
   :num_servers => 1,
   :platform    => "production",
-  :role        => "client",
+  :role        => "blank",
   :ssh_config  => true,         # if not specified, use system defaults
 }
 
@@ -109,13 +109,6 @@ describe Provisioner::CLI do
       end.to raise_error(Provisioner::ConfigurationError, /zone/)
     end
 
-    it 'should require a puppetmaster to be set' do
-      tpl = MOCK_TEMPLATE.dup
-      tpl.delete(:puppetmaster)
-      expect do
-        Provisioner::CLI.process({}, tpl)
-      end.to raise_error(Provisioner::ConfigurationError, /puppetmaster/)
-    end
   end
 
   describe "#execute" do
