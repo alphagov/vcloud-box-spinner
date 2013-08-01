@@ -37,7 +37,7 @@ module Provisioner
 
     def ssh
       @ssh ||= begin
-        Gds::Provisioner.ssh_client.tap { |client|
+        Provisioner.ssh_client.tap { |client|
           logger.debug "Using #{client} as my SSH client"
         }
       end

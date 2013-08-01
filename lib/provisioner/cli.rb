@@ -131,7 +131,7 @@ module Provisioner
 
         provisioner_opts = self.class.process(config, template, options)
 
-        provisioner = Gds::Provisioner.build provisioner_opts
+        provisioner = VcloudBoxProvisioner.build provisioner_opts
         provisioner.execute
       rescue OptionParser::InvalidArgument, ConfigurationError => e
         $stderr.puts "Error: #{e}"
