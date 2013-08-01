@@ -21,13 +21,16 @@ module Provisioner
     def provision(name, options)
       logger.debug "User data for #{name}: #{user_data}"
       server = compute.servers.create(
-        :vdc_uri       => options[:vdc_id],
+        :vdc_uri            => options[:vdc_id],
         :catalog_item_uri   => options[:catalog_id],
-        :name         => options[:vm_name],
-        :network_uri  => options[:network_uri],
-        :network_name => options[:network_name],
-        :user_data    => user_data,
-        :connection_options => {:ssl_verify_peer => false}
+        :name               => options[:vm_name],
+        :network_uri        => options[:network_uri],
+        :network_name       => options[:network_name],
+        :user_data          => user_data,
+        :connection_options => {
+          :ssl_verify_peer   => false,
+          :omit_default_port => true
+        }
       )
       notify "Waiting for server to come up", name
       server.wait_for { server.ready? }

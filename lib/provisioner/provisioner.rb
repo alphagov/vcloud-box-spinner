@@ -25,7 +25,11 @@ module Provisioner
         :vcloud_username    => "#{options[:user]}@#{options[:organisation]}",
         :vcloud_password    => options[:password],
         :vcloud_host        => options[:host],
-        :vcloud_default_vdc => options[:default_vdc]
+        :vcloud_default_vdc => options[:default_vdc],
+        :connection_options => {
+          :ssl_verify_peer   => false,
+          :omit_default_port => true
+        }
       )
     end
     private :compute
