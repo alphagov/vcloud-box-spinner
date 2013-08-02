@@ -117,10 +117,6 @@ module Provisioner
           options[:password] = ask("vCloud password: ") { |q| q.echo = false }
         end
 
-        if options[:ssh_user].nil? then
-          options[:ssh_user] = ask("SSH user: ") { |d| d.default = options[:user] }
-        end
-
         provisioner_opts = self.class.process(config, template, options)
 
         provisioner = VcloudBoxProvisioner.build provisioner_opts
