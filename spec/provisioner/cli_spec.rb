@@ -118,6 +118,29 @@ describe Provisioner::CLI do
     it "should fail if two arguments not provided" do
       expect { Provisioner::CLI.new(['file1']).execute }.to raise_error(SystemExit)
     end
+
+    it "should call provision a machine" do
+      expected_opts = DEFAULTS.merge({:platform => "qa",:role => "blank",
+                       :ssh_config => true,:template_name => "template-name",
+                       :host => "api-end-host",:organisation => "org-name",
+                       :catalog_items => {
+                         :"template-name" => "https://vendor-api-endpoint/catalogItem/100"},
+                       :default_vdc => "https://vendor-api-endpoint/api/vdc/07412",
+                       :domain => "tester.default", :network_name => "Default",
+                       :network_uri => "https://vendor-api-endpoint/api/network/0352",
+                       :vdc_id => "07412", :class => "mytest1", :zone => "tester",
+                       :vm_name => "machine-2", :ip => "192.168.2.2", :user => "badger",
+                       :password => "eggplant",
+                       :catalog_id => "https://vendor-api-endpoint/catalogItem/100"})
+
+      VcloudBoxProvisioner.should_receive(:build).
+        with(expected_opts).
+        and_return(mock(:execute => true))
+
+      cli = Provisioner::CLI.new(['-u', 'badger', '-p', 'eggplant', 'spec/test_data/org.json',
+                                  'spec/test_data/machine.json'])
+      cli.execute
+    end
   end
 
 end

@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 $:.unshift File.dirname(__FILE__) + '/../lib'
-require 'vcloud_box_provisioner'
 
 Excon.defaults[:ssl_verify_peer] = false
 EXCON_DEBUG = true

@@ -2,6 +2,7 @@ require 'json'
 require 'optparse'
 require 'provisioner/errors'
 require 'highline/import'
+require 'vcloud_box_provisioner'
 
 module Provisioner
   class CLI
