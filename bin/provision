@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 $:.unshift File.dirname(__FILE__) + '/../lib'
+require 'provisioner/cli'
+
+$:.unshift File.dirname(__FILE__) + '/../lib'
 
 Excon.defaults[:ssl_verify_peer] = false
 EXCON_DEBUG = true
