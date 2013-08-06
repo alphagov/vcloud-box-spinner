@@ -22,9 +22,9 @@ You should be able to do `vcloud-box-provisioner --help`
 
     Provision a machine described by the JSON template `machine_config` in the vCloud organisation
     described in the JSON config file `org_config`
-    
+
     e.g. vcloud-box-provisioner -u username orgs/staging.json machines/frontend-1.json
-    
+
         -u, --user=USERNAME              vCloud username
         -p, --password=PASSWORD          vCloud password
         -F, --ssh-config=FILENAME        SSH config file(s) to use (can be specified multiple times)
@@ -38,7 +38,7 @@ To provision a machine you will need to specify at least two JSON files:
      organisation into which it is to provision a vApp
   2. A JSON config file which defines the machine-specific setup
 
-The best way to understand the formats of the json files, read the docs 
+The best way to understand the formats of the json files, read the docs
 [here](/docs/json_formats.md)
 
 Once you have an org and machine config, you can invoke the provisioner as
