@@ -1,10 +1,36 @@
 # vCloud Provisioner
 
 This is a wrapper around the vCloud director API that should allow for easy
-provisioning of VMs. It's a bit of a mess at the moment. Hopefully that will
-improve over time.
+provisioning of VMs.
+
+## Installation
+
+    gem install vcloud_network_configurator
+
+* Note: It is work in progress, and currently you would have to build
+  them gem locally using the following commands
+
+      git clone git@github.gds:gds/vcloud-box-configurator
+      gem build vcloud-box-configurator.gemspec
+      gem install ./vcloud-box-configurator-0.1.0.gem
 
 ## Usage
+
+You should be able to do `vcloud-box-provisioner --help`
+
+    Usage: vcloud-box-provisioner [options] <org_config> <machine_config>
+
+    Provision a machine described by the JSON template `machine_config` in the vCloud organisation
+    described in the JSON config file `org_config`
+    
+    e.g. vcloud-box-provisioner -u username orgs/staging.json machines/frontend-1.json
+    
+        -u, --user=USERNAME              vCloud username
+        -p, --password=PASSWORD          vCloud password
+        -F, --ssh-config=FILENAME        SSH config file(s) to use (can be specified multiple times)
+        -d, --debug                      Enable debugging output
+        -v, --verbose                    Enable verbose output
+        -h, --help                       Show usage instructions
 
 To provision a machine you will need to specify at least two JSON files:
 
@@ -12,35 +38,20 @@ To provision a machine you will need to specify at least two JSON files:
      organisation into which it is to provision a vApp
   2. A JSON config file which defines the machine-specific setup
 
-The best way to understand the format of these files is probably by example.
-See [the deployment repository](https://github.com/alphagov/deployment) for
-numerous examples.
+The best way to understand the formats of the json files, read the docs 
+[here](/docs/json_formats.md)
 
 Once you have an org and machine config, you can invoke the provisioner as
 follows:
 
-    bundle exec bin/provision org_config.json machine_config.json
-
-In all likelihood, you should set a few of the command line options too. In
-particular, make sure you correctly specify the name of your user on the
-Puppet master (the `-s` option).
-
-See `bundle exec bin/provision --help` for a full list of available options.
+    vcloud-box-provisioner -u username -p password org_config.json machine_config.json
 
 ## Hacking
+
+refer [here](/docs/hacking.md)
 
 ### Testing
 
 You can run the tests with:
 
     bundle exec rake
-
-### Changing puppetmaster & puppetclient scripts
-
-Depending on the roles assigned in json in vcloud-templates,
-vcloud-provisioner chooses the puppetmaster.sh or puppetclient.sh
-scripts to run on the client. Though you would be running bin/provision
-command from your local box, it would not be using these scripts from
-your local boxes, rather it would be downloading this from S3
-(gds-public-readable-tarballs bucket). So if you would be making changes
-to these scripts you need to upload them to S3 after making changes.
