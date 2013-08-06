@@ -28,3 +28,14 @@
             <CatalogItem type="application/vnd.vmware.vcloud.catalogItem+xml" name="{catalog-item-name}" href="https://vendor-api-endpoint/api/catalogItem/{catalog-item-uuid}"/>
 
 
+## Network UUID
+
+* Authorization: (same as describe in above steps)
+
+* Get org details:
+
+        curl -v --insecure -H "x-vcloud-authorization: <token>" -H "Accept: application/*+xml;version=5.1" https://vendor-api-endpoint/api/org/{org-uuid}
+
+  - The above returns network details, choose the one you need on basis of name
+
+            <Link rel="down" type="application/vnd.vmware.vcloud.orgNetwork+xml" name="{network-name}" href="https://vendor-api-endpoint/api/network/{network-uuid}"/>
