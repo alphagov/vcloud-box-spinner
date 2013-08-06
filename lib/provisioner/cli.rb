@@ -67,7 +67,7 @@ module Provisioner
         o.separator "Provision a machine described by the JSON template `machine_config` in the vCloud organisation"
         o.separator "described in the JSON config file `org_config`"
         o.separator ""
-        o.separator "e.g. provision -u johndoe orgs/staging.json machines/frontend-1.json"
+        o.separator "e.g. vcloud-box-provisioner -u johndoe orgs/staging.json machines/frontend-1.json"
         o.separator ""
 
         o.on("-u", "--user", "=USERNAME", "vCloud username") do |v|
