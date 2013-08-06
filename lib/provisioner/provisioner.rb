@@ -92,7 +92,6 @@ module Provisioner
       [
         options[:platform],
         options[:class],
-        options[:role],
         timestamp,
         ("%02d" % (number + 1))
       ].compact.join('-')

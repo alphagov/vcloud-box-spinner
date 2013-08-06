@@ -14,7 +14,6 @@ DEFAULTS = {
   :num_cores   => 4,
   :num_servers => 1,
   :platform    => "production",
-  :role        => "blank",
   :ssh_config  => true,         # if not specified, use system defaults
 }
 
@@ -120,7 +119,7 @@ describe Provisioner::CLI do
     end
 
     it "should call provision a machine" do
-      expected_opts = DEFAULTS.merge({:platform => "qa",:role => "blank",
+      expected_opts = DEFAULTS.merge({:platform => "qa",
                        :ssh_config => true,:template_name => "template-name",
                        :host => "api-end-host",:organisation => "org-name",
                        :catalog_items => {

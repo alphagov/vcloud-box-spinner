@@ -14,7 +14,6 @@ module Provisioner
         :num_cores   => 4,
         :num_servers => 1,
         :platform    => "production",
-        :role        => "blank",
         :ssh_config  => true,         # if not specified, use system defaults
       }.freeze
     end

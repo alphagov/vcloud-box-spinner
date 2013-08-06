@@ -13,22 +13,10 @@ require 'parallel'
 require 'fog'
 
 module VcloudBoxProvisioner
-  PROVISIONERS = {
-    "blank"  => Provisioner::BlankProvisioner
-  }.freeze
-
   def self.build options = {}
     options[:logger] ||= default_logger options
     options[:logger].debug "Building provisioner for #{options.inspect}"
-    provisioner = provisioner_for_role options[:role]
-    provisioner.new options
-  end
-
-  def self.provisioner_for_role role
-    return Provisioner if role.to_s == ""
-    return PROVISIONERS[role] if PROVISIONERS.key? role
-    raise Provisioner::NoSuchRole,
-      "I don't know how to provision the role `#{role}`"
+    Provisioner::BlankProvisioner.new options
   end
 
   class << self
