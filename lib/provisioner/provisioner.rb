@@ -34,6 +34,18 @@ module Provisioner
       validate_options
       if ask("Do you really want to delete '#{options[:vm_name]}'? (yes/no) ") == "yes"
         logger.debug "Proceeding delete operation"
+        vapp_href = compute.servers.service.vapps.detect {|v| v.name == options[:vm_name] }.href
+        vapp = compute.servers.service.get_vapp(vapp_href)
+        if vapp.on?
+          logger.debug "The vApp is running, stopping it..."
+          vapp.service.undeploy vapp_href
+          logger.debug "Waiting for vApp to stop ..."
+          vapp.wait_for { vapp.off? }
+        end
+        vapp.wait_for { vapp.off? } #double check
+        logger.debug "The vApp is not running now ..."
+        logger.debug "Deleting the vApp"
+        vapp.service.delete_vapp vapp_href
       else
         logger.debug "Abandoning delete operation"
       end

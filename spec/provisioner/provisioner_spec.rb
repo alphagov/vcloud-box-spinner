@@ -3,6 +3,7 @@ require 'provisioner/errors'
 require 'provisioner/provisioner'
 
 describe 'Provisioner::Provisioner' do
+
   it "should error if credentials not provided" do
     logger = mock(:debug => true, :error => true)
     expect {
