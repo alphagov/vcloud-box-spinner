@@ -83,6 +83,10 @@ module Provisioner
           options[:ssh_config].push(v)
         end
 
+        o.on('-s', '--setup-script', "=SETUP-SCRIPT", "path to setup script that should run after machine is brought up") do |v|
+          options[:setup_script] = v
+        end
+
         o.on("-d", "--debug", "Enable debugging output") do
           options[:debug] = true
         end

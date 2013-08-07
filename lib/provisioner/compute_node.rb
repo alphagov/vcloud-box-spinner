@@ -7,14 +7,14 @@ require 'nokogiri'
 module Provisioner
   module ComputeNode
     def user_data_files
-      [File.expand_path("userdata_templates/preamble.sh", File.dirname(__FILE__))]
+      [File.expand_path(options[:setup_script])]
     end
     private :user_data_files
 
     def user_data
-      ERB.new(user_data_files.map { |f|
+      user_data_files.map { |f|
         File.read(f)
-      }.join("\n")).result(binding)
+      }.join("\n")
     end
     private :user_data
 
