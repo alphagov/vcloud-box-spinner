@@ -1,5 +1,7 @@
 module Provisioner
   class Provisioner
+    AVAILABLE_ACTIONS = ['create']
+
     attr_accessor :options
     private :options=, :options
 
@@ -10,6 +12,9 @@ module Provisioner
     end
 
     def execute(action)
+      unless AVAILABLE_ACTIONS.include?(action)
+        raise(ConfigurationError, "The action '#{action}' is not a valid action")
+      end
       send(action)
     end
 
