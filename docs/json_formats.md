@@ -44,7 +44,7 @@ the same. An example is as follows
 * default_vdc, is the herf to vdc network.
 * network-name, can be found out from vcloud UI `Adminstration -> Your VDC -> Org VDC Networks -> the network you would use it for`
 
-To find various uuids, please refer [here](/docs/uuids.doc)
+To find various uuids, please refer [here](/docs/uuids.md)
 
 Note: We would be removing platform from the settings, as it is currently only
 used to set facter variables on the newly set up machine.
