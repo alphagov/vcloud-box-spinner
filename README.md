@@ -28,6 +28,7 @@ You should be able to do `vcloud-box-provisioner --help`
         -u, --user=USERNAME              vCloud username
         -p, --password=PASSWORD          vCloud password
         -F, --ssh-config=FILENAME        SSH config file(s) to use (can be specified multiple times)
+        -s, --setup-script=SETUP-SCRIPT  path to setup script that should run after machine is brought up
         -d, --debug                      Enable debugging output
         -v, --verbose                    Enable verbose output
         -h, --help                       Show usage instructions
@@ -37,6 +38,23 @@ To provision a machine you will need to specify at least two JSON files:
   1. A JSON config file which tells the provisioner about the vCloud
      organisation into which it is to provision a vApp
   2. A JSON config file which defines the machine-specific setup
+
+Options:
+
+  - `user` is the username on your "vmware vcloud director" page
+    (usually in the top right corner).
+  - `setup-script` allows you to pass a script file path (shell), which
+    would be loaded as guest customization script. The purpose of
+    providing this option, is to let user do some basic bootstraping.
+    The script is not for the purpose of encouraging configuration
+    management and that should be done separately. A particular example
+    of how you can use the script is - You can set ssh configuration for
+    a user(eg ci), which can ssh in the system later and run the config
+    management script/tool.
+    On how to write this script please refer the following links:
+
+      - [Understand Guest OS Customisation](http://pubs.vmware.com/vcd-51/index.jsp?topic=%2Fcom.vmware.vcloud.users.doc_51%2FGUID-BB682E4D-DCD7-4936-A665-0B0FBD6F0EB5.html)
+      - [Example of scripts](http://pubs.vmware.com/vcd-51/index.jsp?topic=%2Fcom.vmware.vcloud.users.doc_51%2FGUID-724EB7B5-5C97-4A2F-897F-B27F1D4226C7.html)
 
 The best way to understand the formats of the json files, read the docs
 [here](/docs/json_formats.md)
