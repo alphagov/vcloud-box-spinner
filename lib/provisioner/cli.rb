@@ -18,23 +18,25 @@ module Provisioner
       }.freeze
     end
 
-    def self.process(config, template, options = {})
+    def self.process(options = {})
       # The template must specify a zone so we know where to look in the
       # organisation config
       begin
-        zone = template.fetch(:zone)
+        zone = options[:machine_metadata].fetch(:zone)
       rescue KeyError
-        raise ConfigurationError, "The template doesn't specify a zone (Maybe you've put template and config in the wrong order?)"
+        raise ConfigurationError, "The machine configuration doesn't specify " +
+          "a zone (Maybe you've put machine metadata and org config in the wrong order?)"
       end
 
       # Internal defaults
       res = self.defaults.dup
       # vCloud config defaults
-      res.merge!(config.fetch(:default, {}))
+      org_config = options.delete(:org_config)
+      res.merge!(org_config.fetch(:default, {}))
       # vCloud zone defaults
-      res.merge!(config.fetch(zone.to_sym, {}))
-      # Machine template options
-      res.merge!(template)
+      res.merge!(org_config.fetch(zone.to_sym, {}))
+      # Machine metadata options
+      res.merge!(options.delete(:machine_metadata))
       # Command line options
       res.merge!(options)
 
@@ -61,14 +63,18 @@ module Provisioner
 
       optparser = OptionParser.new do |o|
 
-        o.banner = "Usage: #{File.basename($0)} [options] <org_config> <machine_config>"
+        o.banner = "Usage: #{File.basename($0)} [options] <action>"
 
         o.separator ""
-        o.separator "Provision a machine described by the JSON template `machine_config` in the vCloud organisation"
+        o.separator "Provision a machine described by the JSON template `machine_metadata` in the vCloud organisation"
         o.separator "described in the JSON config file `org_config`"
         o.separator ""
-        o.separator "e.g. vcloud-box-provisioner -u johndoe orgs/staging.json machines/frontend-1.json"
+        o.separator "e.g. vcloud-box-provisioner -u johndoe -o orgs/staging.json machines/frontend-1.json create"
         o.separator ""
+        o.separator "[Available actions]:"
+        o.separator "   create"
+        o.separator ""
+        o.separator "[Available options]:"
 
         o.on("-u", "--user", "=USERNAME", "vCloud username") do |v|
           options[:user] = v
@@ -81,6 +87,18 @@ module Provisioner
         o.on("-F", "--ssh-config", "=FILENAME", "SSH config file(s) to use (can be specified multiple times)") do |v|
           options[:ssh_config] ||= []
           options[:ssh_config].push(v)
+        end
+
+        options[:org_config] = {}
+        o.on("-o", "--org-config", "=ORG-CONFIG-JSON",
+             "The organisation configuration json file path") do |v|
+          options[:org_config] = JSON.parse(File.read(v), :symbolize_names => true)
+        end
+
+        options[:machine_metadata] = {}
+        o.on("-m", "--machine-config", "=MACHINE-CONFIG-JSON",
+             "The machine configuration json file path") do |v|
+          options[:machine_metadata] = JSON.parse(File.read(v), :symbolize_names => true)
         end
 
         o.on('-s', '--setup-script', "=SETUP-SCRIPT", "path to setup script that should run after machine is brought up") do |v|
@@ -104,14 +122,11 @@ module Provisioner
       begin
         optparser.parse!(@args)
 
-        if @args.length != 2
-          raise ConfigurationError, "#{File.basename($0)} takes two arguments"
+        if @args.length != 1
+          raise ConfigurationError, "#{File.basename($0)} takes one argument"
         end
 
-        config_file, template_file = @args
-
-        config = JSON.parse(File.read(config_file), :symbolize_names => true)
-        template = JSON.parse(File.read(template_file), :symbolize_names => true)
+        action = @args
 
         if options[:user].nil? then
           options[:user] = ask("vCloud username: ")
@@ -121,10 +136,10 @@ module Provisioner
           options[:password] = ask("vCloud password: ") { |q| q.echo = false }
         end
 
-        provisioner_opts = self.class.process(config, template, options)
+        provisioner_opts = self.class.process(options)
 
         provisioner = VcloudBoxProvisioner.build provisioner_opts
-        provisioner.execute
+        provisioner.execute(action)
       rescue OptionParser::InvalidArgument, ConfigurationError => e
         $stderr.puts "Error: #{e}"
         $stderr.puts

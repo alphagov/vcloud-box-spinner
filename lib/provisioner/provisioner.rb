@@ -9,7 +9,11 @@ module Provisioner
       self.options = options
     end
 
-    def execute
+    def execute(action)
+      send(action)
+    end
+
+    def create
       logger.debug "Validating options"
       validate_options
       logger.debug "Preparing the run"
@@ -18,6 +22,7 @@ module Provisioner
       launch_servers
       logger.debug "Done"
     end
+    private :create
 
     def compute
       @compute ||= Fog::Compute.new(
