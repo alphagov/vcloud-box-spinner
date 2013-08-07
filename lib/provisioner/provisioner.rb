@@ -1,6 +1,6 @@
 module Provisioner
   class Provisioner
-    AVAILABLE_ACTIONS = ['create']
+    AVAILABLE_ACTIONS = ['create', 'delete']
 
     attr_accessor :options
     private :options=, :options
@@ -28,6 +28,17 @@ module Provisioner
       logger.debug "Done"
     end
     private :create
+
+    def delete
+      logger.debug "Validating options"
+      validate_options
+      if ask("Do you really want to delete '#{options[:vm_name]}'? (yes/no) ") == "yes"
+        logger.debug "Proceeding delete operation"
+      else
+        logger.debug "Abandoning delete operation"
+      end
+    end
+    private :delete
 
     def compute
       @compute ||= Fog::Compute.new(

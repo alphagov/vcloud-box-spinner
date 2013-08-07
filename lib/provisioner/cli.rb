@@ -72,7 +72,7 @@ module Provisioner
         o.separator "e.g. vcloud-box-provisioner -u johndoe -o orgs/staging.json machines/frontend-1.json create"
         o.separator ""
         o.separator "[Available actions]:"
-        o.separator "   #{Provisioner::AVAILABLE_ACTIONS.join(',')}"
+        o.separator "   #{Provisioner::AVAILABLE_ACTIONS.join(', ')}"
         o.separator ""
         o.separator "[Available options]:"
 
@@ -126,7 +126,7 @@ module Provisioner
           raise ConfigurationError, "#{File.basename($0)} takes one argument"
         end
 
-        action = @args
+        action = @args[0]
 
         if options[:user].nil? then
           options[:user] = ask("vCloud username: ")
