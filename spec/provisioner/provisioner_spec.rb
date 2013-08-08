@@ -26,9 +26,8 @@ describe 'Provisioner::Provisioner' do
   end
 
   describe "delete" do
-    pending "should delete vApp for the given vm name" do
-
-    end
+    pending "delete vApp only if you confirm to delete vApp"
+    pending "don't delete vApp only if you don't confirm to delete vApp"
   end
 
 end
