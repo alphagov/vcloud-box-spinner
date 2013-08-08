@@ -9,9 +9,11 @@ end
 
 describe 'Provisoner::ComputeNode' do
 
-  pending "should undeploy the vApp is running while delete action" do
+  it "should undeploy the vApp is running while delete action" do
+    pending "mock not supported in fog"
   end
 
-  pending "should not undeploy the vApp is stopped while delete action" do
+  it "should not undeploy the vApp is stopped while delete action" do
+    pending "mock not supported in fog"
   end
 end

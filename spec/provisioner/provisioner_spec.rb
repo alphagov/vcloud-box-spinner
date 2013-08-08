@@ -26,8 +26,12 @@ describe 'Provisioner::Provisioner' do
   end
 
   describe "delete" do
-    pending "delete vApp only if you confirm to delete vApp"
-    pending "don't delete vApp only if you don't confirm to delete vApp"
+    it "delete vApp only if you confirm to delete vApp" do
+      pending "mock not supported in fog"
+    end
+    it "don't delete vApp only if you don't confirm to delete vApp" do
+      pending "mock not supported in fog"
+    end
   end
 
 end
