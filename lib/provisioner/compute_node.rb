@@ -169,5 +169,21 @@ module Provisioner
     def prepare_run
       super
     end
+
+    def delete_vapp
+      super
+      vapp_href = compute.servers.service.vapps.detect {|v| v.name == options[:vm_name] }.href
+      vapp = compute.servers.service.get_vapp(vapp_href)
+      if vapp.on?
+        logger.debug "The vApp is running, stopping it..."
+        vapp.service.undeploy vapp_href
+        logger.debug "Waiting for vApp to stop ..."
+        vapp.wait_for { vapp.off? }
+      end
+      vapp.wait_for { vapp.off? } #double check
+      logger.debug "The vApp is not running now ..."
+      logger.debug "Deleting the vApp"
+      vapp.service.delete_vapp vapp_href
+    end
   end
 end
