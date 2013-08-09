@@ -15,7 +15,8 @@ require 'fog'
 module VcloudBoxProvisioner
   def self.build options = {}
     options[:logger] ||= default_logger options
-    options[:logger].debug "Building provisioner for #{options.inspect}"
+    redacted_options = options.clone.update({:password => 'REDACTED'})
+    options[:logger].debug "Building provisioner for #{redacted_options.inspect}"
     Provisioner::BlankProvisioner.new options
   end
 
