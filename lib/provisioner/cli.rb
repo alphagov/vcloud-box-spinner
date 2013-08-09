@@ -11,7 +11,7 @@ module Provisioner
         :debug       => false,
         :log_level   => 5,
         :memory      => 4096,
-        :num_cores   => 4,
+        :num_cores   => 2,
         :num_servers => 1,
         :platform    => "production",
         :ssh_config  => true,         # if not specified, use system defaults
