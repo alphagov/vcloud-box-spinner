@@ -3,17 +3,17 @@ $:.push File.expand_path("../lib", __FILE__)
 require "provisioner/version"
 
 Gem::Specification.new do |s|
-  s.name        = "vcloud-box-configurator"
+  s.name        = "vcloud-box-spinner"
   s.version     = Provisioner::VERSION
   s.authors     = ["Garima Singh"]
   s.email       = ["igarimasingh@gmail.com"]
-  s.homepage    = "https://github.gds/gds/vcloud-box-configurator"
+  s.homepage    = "https://github.com/com/vcloud-box-spinner"
   s.summary     = %q{Provision servers, with vcloud API}
   s.description = %q{Create new VM and apply an opinionated set of commands to
-them, using vcloud API. The vcloud-box-configurator is a thin wrapper around fog,
+them, using vcloud API. The vcloud-box-spinner is a thin wrapper around fog,
 which enables you to be able to configure VMs with static IPs}
 
-  s.rubyforge_project = "vcloud-box-configurator"
+  s.rubyforge_project = "vcloud-box-spinner"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

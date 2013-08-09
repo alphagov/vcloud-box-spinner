@@ -69,7 +69,7 @@ module Provisioner
         o.separator "Provision a machine described by the JSON template `machine_metadata` in the vCloud organisation"
         o.separator "described in the JSON config file `org_config`"
         o.separator ""
-        o.separator "e.g. vcloud-box-provisioner -u johndoe -o orgs/staging.json -m machines/frontend-1.json create"
+        o.separator "e.g. vcloud-box-spinner -u johndoe -o orgs/staging.json -m machines/frontend-1.json create"
         o.separator ""
         o.separator "[Available actions]:"
         o.separator "   #{Provisioner::AVAILABLE_ACTIONS.join(', ')}"
@@ -96,7 +96,7 @@ module Provisioner
         end
 
         options[:machine_metadata] = {}
-        o.on("-m", "--machine-config", "=MACHINE-CONFIG-JSON",
+        o.on("-m", "--machine-config", "=METADATA",
              "The machine configuration json file path") do |v|
           options[:machine_metadata] = JSON.parse(File.read(v), :symbolize_names => true)
         end

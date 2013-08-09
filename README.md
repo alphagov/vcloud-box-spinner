@@ -5,25 +5,18 @@ provisioning of VMs.
 
 ## Installation
 
-    gem install vcloud_network_configurator
-
-* Note: It is work in progress, and currently you would have to build
-  them gem locally using the following commands
-
-      git clone git@github.gds:gds/vcloud-box-configurator
-      gem build vcloud-box-configurator.gemspec
-      gem install ./vcloud-box-configurator-0.1.0.gem
+    gem install vcloud-box-spinner
 
 ## Usage
 
-You should be able to do `vcloud-box-provisioner --help`
+You should be able to do `vcloud-box-spinner --help`
 
-    Usage: vcloud-box-provisioner [options] <org_config> <machine_config>
+    Usage: vcloud-box-spinner [options] <org_config> <machine_config>
 
     Provision a machine described by the JSON template `machine_config` in the vCloud organisation
     described in the JSON config file `org_config`
 
-    e.g. vcloud-box-provisioner -u username orgs/staging.json machines/frontend-1.json
+    e.g. vcloud-box-spinner -u username orgs/staging.json machines/frontend-1.json
 
         -u, --user=USERNAME              vCloud username
         -p, --password=PASSWORD          vCloud password
@@ -62,7 +55,7 @@ The best way to understand the formats of the json files, read the docs
 Once you have an org and machine config, you can invoke the provisioner as
 follows:
 
-    vcloud-box-provisioner -u username -p password org_config.json machine_config.json
+    vcloud-box-spinner -u username -p password org_config.json machine_config.json
 
 ## Hacking
 
@@ -77,7 +70,7 @@ You can run the tests with:
 ## Known Issues
 
 - We are using fog ruby gem, as a wrapper around vCloud API. The fog gem currently hasn't released fix for "case
-  insensitivity for Set-Cookie headers" 
+  insensitivity for Set-Cookie headers"
   [here](https://github.com/singhgarima/fog/commit/b7f8db97b15f1dc48541f5f2781f70fb2b743267). The fix till then is,
   in your Gemfile, add the following lines
 
