@@ -113,7 +113,6 @@ module Provisioner
     def server_name number
       [
         options[:platform],
-        options[:class],
         timestamp,
         ("%02d" % (number + 1))
       ].compact.join('-')
