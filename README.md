@@ -73,3 +73,14 @@ refer [here](/docs/hacking.md)
 You can run the tests with:
 
     bundle exec rake
+
+## Known Issues
+
+- We are using fog ruby gem, as a wrapper around vCloud API. The fog gem currently hasn't released fix for "case
+  insensitivity for Set-Cookie headers" 
+  [here](https://github.com/singhgarima/fog/commit/b7f8db97b15f1dc48541f5f2781f70fb2b743267). The fix till then is,
+  in your Gemfile, add the following lines
+
+        gem 'fog',
+            :git => 'git://github.com/fog/fog.git',
+            :ref => '3f034ccce030cff32e867f57482387d249b4da90'
