@@ -2,12 +2,36 @@ require 'spec_helper'
 require 'provisioner/errors'
 require 'provisioner/provisioner'
 
-describe 'Provisioner::Provisioner' do
-  it "should error if credentials not provided" do
+shared_examples "validate credentials" do |action|
+  it "should error if credentials not provided while perfoming #{action}" do
     logger = mock(:debug => true, :error => true)
-    expect { Provisioner::Provisioner.new({:logger => logger}).execute }.
-      should raise_error(Provisioner::ConfigurationError,
-                         'VCloud credentials must be specified')
+    expect {
+      Provisioner::Provisioner.new({:logger => logger}).execute(action)
+    }.to raise_error(Provisioner::ConfigurationError,
+                     'VCloud credentials must be specified')
+  end
+end
+
+describe 'Provisioner::Provisioner' do
+
+  it_should_behave_like "validate credentials", 'create'
+  it_should_behave_like "validate credentials", 'delete'
+
+  it "should error out if action passed isn't present" do
+    logger = mock(:debug => true, :error => true)
+    expect {
+      Provisioner::Provisioner.new({:logger => logger}).execute('disco')
+    }.to raise_error(Provisioner::ConfigurationError,
+                     'The action \'disco\' is not a valid action')
+  end
+
+  describe "delete" do
+    it "delete vApp only if you confirm to delete vApp" do
+      pending "mock not supported in fog"
+    end
+    it "don't delete vApp only if you don't confirm to delete vApp" do
+      pending "mock not supported in fog"
+    end
   end
 
 end

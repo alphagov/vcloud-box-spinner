@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'provisioner/cli'
 
-MOCK_TEMPLATE = {
+MACHINE_METADATA = {
   :puppetmaster => 'foo.bar.baz',
   :zone         => 'foo',
   :catalog_id   => 'default_catalog_id',
@@ -24,32 +24,38 @@ describe Provisioner::CLI do
 
   describe "#process" do
     it 'should set options from built-in defaults' do
-      res = Provisioner::CLI.process({}, MOCK_TEMPLATE)
+      options = { :machine_metadata => MACHINE_METADATA,
+                  :org_config => {} }
+      res = Provisioner::CLI.process(options)
       res.should include(DEFAULTS)
     end
 
     it 'should set options from the vCloud config defaults' do
       config = { :default => { :ip => '5.6.7.8' } }
-      res = Provisioner::CLI.process(config, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process({:machine_metadata => MACHINE_METADATA,
+                                      :org_config => config})
       res.should include(:ip => '5.6.7.8')
     end
 
     it 'should set options from the vCloud config based on the specified zone' do
       config = { :foo => { :ip => '9.8.7.6' } }
-      res = Provisioner::CLI.process(config, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process({:org_config => config,
+                                      :machine_metadata => MACHINE_METADATA})
       res.should include(:ip => '9.8.7.6')
     end
 
     it 'should set options from the machine template' do
-      tpl = MOCK_TEMPLATE.dup
-      tpl[:ip] = '1.2.3.4'
-      res = Provisioner::CLI.process({}, tpl)
+      options = { :machine_metadata => MACHINE_METADATA.dup.merge( :ip => '1.2.3.4' ),
+                  :org_config => {} }
+      res = Provisioner::CLI.process(options)
       res.should include(:ip => '1.2.3.4')
     end
 
     it 'should set options from the command line' do
-      opts = {:ssh_user => 'donald'}
-      res = Provisioner::CLI.process({}, MOCK_TEMPLATE, opts)
+      opts = {:ssh_user => 'donald',
+              :org_config => {},
+              :machine_metadata => MACHINE_METADATA }
+      res = Provisioner::CLI.process(opts)
       res.should include(:ssh_user => 'donald')
     end
 
@@ -58,53 +64,55 @@ describe Provisioner::CLI do
         :default => { :ip => '1.2.3.4' },
         :foo => { :ip => '5.6.7.8' }
       }
-      res = Provisioner::CLI.process(config, MOCK_TEMPLATE)
+      res = Provisioner::CLI.process({:org_config => config,
+                                      :machine_metadata => MACHINE_METADATA})
       res.should include(:ip => '5.6.7.8')
     end
 
     it 'should override vCloud zone defaults with machine template options' do
-      config = { :foo => { :ip => '1.2.3.4' } }
-      tpl = MOCK_TEMPLATE.dup
-      tpl[:ip] = '5.6.7.8'
-      res = Provisioner::CLI.process(config, tpl)
+      options = { :org_config => { :foo => { :ip => '1.2.3.4' } },
+                  :machine_metadata => MACHINE_METADATA.dup.merge(:ip => '5.6.7.8')}
+      res = Provisioner::CLI.process(options)
       res.should include(:ip => '5.6.7.8')
     end
 
     it 'should override machine template options with command line options' do
-      tpl = MOCK_TEMPLATE.dup
-      tpl[:ssh_user] = 'aaron'
-      opts = { :ssh_user => 'binky' }
-      res = Provisioner::CLI.process({}, MOCK_TEMPLATE, opts)
+      options = { :machine_metadata => MACHINE_METADATA.dup.
+                      merge(:ssh_user => 'aaron'),
+                  :org_config => {},
+                  :ssh_user => 'binky' }
+      res = Provisioner::CLI.process(options)
       res.should include(:ssh_user => 'binky')
     end
 
     it 'should use catalog_id if present' do
-      tpl = MOCK_TEMPLATE.dup
-      tpl.merge!(
-        :catalog_id => 'wibble',
-        :catalog_items => { :my_cool_template => 'incorrect' },
-        :template_name => 'my_cool_template'
-      )
-      res = Provisioner::CLI.process({}, tpl)
+      options = { :machine_metadata => MACHINE_METADATA.dup.merge!(
+                      :catalog_id => 'wibble',
+                      :catalog_items => { :my_cool_template => 'incorrect' },
+                      :template_name => 'my_cool_template'
+                    ),
+                  :org_config => {}}
+      res = Provisioner::CLI.process(options)
       res.should include(:catalog_id => 'wibble')
     end
 
     it 'should use template_name to determine catalog_id if catalog_id not present' do
-      tpl = MOCK_TEMPLATE.dup
+      tpl = MACHINE_METADATA.dup
       tpl.delete(:catalog_id)
       tpl.merge!(
         :catalog_items => { :my_cool_template => 'https://correct_catalog_id' },
         :template_name => 'my_cool_template'
       )
-      res = Provisioner::CLI.process({}, tpl)
+      res = Provisioner::CLI.process({:machine_metadata => tpl,
+                                      :org_config => {}})
       res.should include(:catalog_id => 'https://correct_catalog_id')
     end
 
     it 'should require a zone to be set' do
-      tpl = MOCK_TEMPLATE.dup
+      tpl = MACHINE_METADATA.dup
       tpl.delete(:zone)
       expect do
-        Provisioner::CLI.process({}, tpl)
+        Provisioner::CLI.process({:machine_metadata => tpl})
       end.to raise_error(Provisioner::ConfigurationError, /zone/)
     end
 
@@ -115,29 +123,47 @@ describe Provisioner::CLI do
     after :each do silence_output end
 
     it "should fail if two arguments not provided" do
-      expect { Provisioner::CLI.new(['file1']).execute }.to raise_error(SystemExit)
+      expect {
+        Provisioner::CLI.new(['-u' , 'user', '-p', 'pass']).execute
+      }.to raise_error(SystemExit)
     end
 
     it "should call provision a machine" do
-      expected_opts = DEFAULTS.merge({:platform => "qa",
-                       :ssh_config => true,:template_name => "template-name",
-                       :host => "api-end-host",:organisation => "org-name",
-                       :catalog_items => {
-                         :"template-name" => "https://vendor-api-endpoint/catalogItem/100"},
-                       :default_vdc => "https://vendor-api-endpoint/api/vdc/07412",
-                       :domain => "tester.default", :network_name => "Default",
-                       :network_uri => "https://vendor-api-endpoint/api/network/0352",
-                       :vdc_id => "07412", :class => "mytest1", :zone => "tester",
-                       :vm_name => "machine-2", :ip => "192.168.2.2", :user => "badger",
-                       :password => "eggplant",
-                       :catalog_id => "https://vendor-api-endpoint/catalogItem/100"})
+      default_org_config =
+        { :template_name => "template-name",
+          :host=>"api-end-host",
+          :platform=>"qa",
+          :organisation=>"org-name",
+          :catalog_items => {
+            :"template-name" => "https://vendor-api-endpoint/catalogItem/100"
+          }}
+        zone_org_config =
+          { :default_vdc=>"https://vendor-api-endpoint/api/vdc/07412",
+            :domain => "tester.default",
+            :network_name => "Default",
+            :network_uri => "https://vendor-api-endpoint/api/network/0352",
+            :vdc_id=>"07412" }
+        machine_metadata = { :class => "mytest1",
+                             :zone => "tester",
+                             :vm_name => "machine-2",
+                             :ip => "192.168.2.2" }
+        expected_opts = DEFAULTS.merge(default_org_config).
+          merge(zone_org_config).
+          merge(machine_metadata).
+          merge({ :user => 'badger',
+                  :password => 'eggplant',
+                  :catalog_id => "https://vendor-api-endpoint/catalogItem/100"
+        })
 
       VcloudBoxProvisioner.should_receive(:build).
         with(expected_opts).
         and_return(mock(:execute => true))
 
-      cli = Provisioner::CLI.new(['-u', 'badger', '-p', 'eggplant', 'spec/test_data/org.json',
-                                  'spec/test_data/machine.json'])
+      cli = Provisioner::CLI.new(['-u', 'badger', '-p', 'eggplant',
+                                  '-o', 'spec/test_data/org.json',
+                                  '-m', 'spec/test_data/machine.json',
+                                  'create'
+                                ])
       cli.execute
     end
   end
