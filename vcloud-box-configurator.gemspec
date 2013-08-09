@@ -26,7 +26,7 @@ which enables you to be able to configure VMs with static IPs}
   s.add_development_dependency "webmock"
   s.add_development_dependency "rspec", "~> 2.11.0"
   s.add_development_dependency "equivalent-xml", "~> 0.2.9"
-  s.add_runtime_dependency "fog", "~> 1.9.0"
+  s.add_runtime_dependency "fog", "~> 1.0"
   s.add_runtime_dependency "parallel"
   s.add_runtime_dependency "highline"
   s.add_runtime_dependency "nokogiri", "~> 1.5.0"
