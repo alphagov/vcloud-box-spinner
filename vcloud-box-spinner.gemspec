@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Provisioner::VERSION
   s.authors     = ["Garima Singh"]
   s.email       = ["igarimasingh@gmail.com"]
-  s.homepage    = "https://github.com/com/vcloud-box-spinner"
+  s.homepage    = "https://github.com/alphagov/vcloud-box-spinner"
   s.summary     = %q{Provision servers, with vcloud API}
   s.description = %q{Create new VM and apply an opinionated set of commands to
 them, using vcloud API. The vcloud-box-spinner is a thin wrapper around fog,
