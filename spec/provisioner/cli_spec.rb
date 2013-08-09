@@ -143,8 +143,7 @@ describe Provisioner::CLI do
             :network_name => "Default",
             :network_uri => "https://vendor-api-endpoint/api/network/0352",
             :vdc_id=>"07412" }
-        machine_metadata = { :class => "mytest1",
-                             :zone => "tester",
+        machine_metadata = { :zone => "tester",
                              :vm_name => "machine-2",
                              :ip => "192.168.2.2" }
         expected_opts = DEFAULTS.merge(default_org_config).

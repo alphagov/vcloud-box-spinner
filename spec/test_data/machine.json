@@ -1,5 +1,4 @@
 {
-  "class":            "mytest1",
   "zone":             "tester",
   "vm_name":          "machine-2",
   "ip":               "192.168.2.2"

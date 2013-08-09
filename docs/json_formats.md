@@ -55,13 +55,11 @@ Each machine JSON file contain key value pair to represent machine specific
 meta data
 
     {
-      "class":            "classname",
       "zone":             "<vdc-ref-name/zone>",
       "vm_name":          "vm-machine-name",
       "ip":               "<internal-ip-addr>"
     }
 
-* class key is used to set class name as a facter variable. This will soon be removed
 * zone, is the reference to <vdc-ref-name/zone> used in organisation json
 * vm-machine-name, is the name of vApp
 * ip is the internal ip addr that would be used.
