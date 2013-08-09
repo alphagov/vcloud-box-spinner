@@ -174,7 +174,7 @@ module Provisioner
       super
       vapp_href = compute.servers.service.vapps.detect {|v| v.name == options[:vm_name] }.href
       vapp = compute.servers.service.get_vapp(vapp_href)
-      if vapp.on?
+      if vapp.on? or (vapp.off? and vapp.deployed)
         logger.debug "The vApp is running, stopping it..."
         vapp.service.undeploy vapp_href
         logger.debug "Waiting for vApp to stop ..."
