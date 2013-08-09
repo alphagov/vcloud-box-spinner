@@ -181,6 +181,12 @@ module Provisioner
         vapp.wait_for { vapp.off? }
       end
       vapp.wait_for { vapp.off? } #double check
+
+      # This is added as vapp after being off, might still
+      # be in a state which isn't ready. This would check
+      # status of each vm associated with vapp
+      vapp.servers.entries.each { |server| server.wait_for { server.ready? } }
+
       logger.debug "The vApp is not running now ..."
       logger.debug "Deleting the vApp"
       vapp.service.delete_vapp vapp_href
