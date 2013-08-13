@@ -3,6 +3,12 @@ $:.unshift File.join(specdir, '../lib')
 $:.unshift File.join(specdir, '..')
 
 require 'rspec'
+require 'webmock/rspec'
+
+Rspec.configure do |config|
+  config.backtrace_clean_patterns = [
+  ]
+end
 
 # Redirects stderr and stdout to /dev/null.
 def silence_output
