@@ -2,7 +2,7 @@ module Provisioner
   module ComputeAction
     module Create
       def user_data_files
-        [File.expand_path(options[:setup_script])]
+        options[:setup_script].nil? ? [] : [File.expand_path(options[:setup_script])]
       end
       private :user_data_files
 
