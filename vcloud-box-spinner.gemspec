@@ -20,6 +20,8 @@ which enables you to be able to configure VMs with static IPs}
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.license = 'MIT'
+
   s.add_development_dependency "rake"
   s.add_development_dependency "minitest"
   s.add_development_dependency "mocha"
