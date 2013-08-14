@@ -51,6 +51,7 @@ module Provisioner
         guest_customization_section = customization_options[:GuestCustomizationSection]
 
         response = modify_xml(guest_customization_section[:href], guest_customization_section[:type]) do |xml|
+          xml.at_css('Enabled').content = 'true'
           xml.at_css('ComputerName').content = options[:vm_name]
           if xml.at_css('CustomizationScript').nil?
             xml.at_css('ComputerName').before("<CustomizationScript>#{CGI.escapeHTML(user_data)}</CustomizationScript>\n")
