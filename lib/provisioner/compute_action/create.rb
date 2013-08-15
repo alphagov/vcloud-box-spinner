@@ -143,11 +143,25 @@ module Provisioner
       end
       private :wait_for_vms_to_appear
 
+      def wait_for_vmware_tools(server)
+        logger.debug("cycling power to identify VMware Tools...")
+
+        server.power_on
+        server.wait_for { server.ready? }
+        server.wait_for(90) { attributes[:children][:RuntimeInfoSection][:VMWareTools] }
+
+        # FIXME: It would be safer to use #shutdown but it appears to return
+        # a 202 response when fog currently expects a 204.
+        server.power_off
+        server.wait_for { server.ready? }
+      end
+
       def launch_server name
         super
         server = provision(name, options)
 
         wait_for_vms_to_appear(server, options)
+        wait_for_vmware_tools(server)
 
         update_guest_customization_options(server, options)
         update_network_connection_options(server, options)
