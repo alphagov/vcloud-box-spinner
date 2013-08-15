@@ -128,13 +128,6 @@ module Provisioner
       end
       private :update_network_connection_options
 
-      def power_on(server)
-        connection = compute.servers.service
-        power_on_uri = server.links.find {|link| link[:rel] == 'power:powerOn' }[:href]
-        connection.request(:uri => power_on_uri, :method => "POST", :expects => 202)
-      end
-      private :power_on
-
       def wait_for_vms_to_appear(server, options)
         100.times.each do |x|
           logger.debug("waiting for vm to spin up...")
@@ -160,7 +153,8 @@ module Provisioner
         update_network_connection_options(server, options)
         update_machine_resources(server, options)
 
-        power_on(server)
+        server.power_on
+        server.wait_for { server.ready? }
 
         server
       end
