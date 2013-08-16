@@ -150,9 +150,7 @@ module Provisioner
         server.wait_for { server.ready? }
         server.wait_for(90) { attributes[:children][:RuntimeInfoSection][:VMWareTools] }
 
-        # FIXME: It would be safer to use #shutdown but it appears to return
-        # a 202 response when fog currently expects a 204.
-        server.power_off
+        server.undeploy
         server.wait_for { server.ready? }
       end
 
