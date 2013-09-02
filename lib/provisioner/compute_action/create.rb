@@ -135,7 +135,7 @@ module Provisioner
       private :power_on
 
       def wait_for_vms_to_appear(server, options)
-        100.times.each do |x|
+        180.times.each do |x|
           logger.debug("waiting for vm to spin up...")
           if server.attributes[:children] && server.attributes[:children][:href]
             return
