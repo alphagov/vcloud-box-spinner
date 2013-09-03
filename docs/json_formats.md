@@ -21,16 +21,11 @@ the same. An example is as follows
         "template_name": "<catalog-item-name>",
         "host": "<api-vendor-endpoint>",
         "platform": "<platform-name>",
-        "organisation": "<org-name>",
-        "catalog_items": {
-          "<catalog-item-name": "https://api.vcd.portal.skyscapecloud.com/api/catalogItem/<catalog-item-uuid>"
-        }
+        "organisation": "<org-name>"
       },
       "<vdc-ref-name/zone>": {
-        "default_vdc": "https://api.vcd.portal.skyscapecloud.com/api/vdc/<vdc-uuid>",
         "network_name": "<network-name>",
-        "network_uri": "https://api.vcd.portal.skyscapecloud.com/api/network/<network-uuid>",
-        "vdc_id": "<vdc-uuid>"
+        "vdc_name": "<vdc-name>"
       }
     }
 
@@ -41,7 +36,6 @@ the same. An example is as follows
 * vdc-ref-name/zone, is an non vcloud specific term, which we use to map the
   machines to a particular network. You would see the reference to the value
   in machine JSON file.
-* default_vdc, is the herf to vdc network.
 * network-name, can be found out from vcloud UI `Adminstration -> Your VDC -> Org VDC Networks -> the network you would use it for`
 
 To find various uuids, please refer [here](/docs/uuids.md)

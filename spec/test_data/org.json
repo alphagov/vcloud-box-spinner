@@ -3,16 +3,11 @@
     "template_name": "template-name",
     "host": "api-end-host",
     "platform": "qa",
-    "organisation": "org-name",
-    "catalog_items": {
-      "template-name": "https://vendor-api-endpoint/catalogItem/100"
-    }
+    "organisation": "org-name"
   },
   "tester": {
-    "default_vdc": "https://vendor-api-endpoint/api/vdc/07412",
     "domain": "tester.default",
     "network_name": "Default",
-    "network_uri": "https://vendor-api-endpoint/api/network/0352",
-    "vdc_id": "07412"
+    "vdc_name": "vdc-name"
   }
 }

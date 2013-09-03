@@ -40,19 +40,8 @@ module Provisioner
       # Command line options
       res.merge!(options)
 
-      unless res.include? :catalog_id
-        begin
-          template_name = res.fetch(:template_name)
-          catalog_id = res.fetch(:catalog_items).fetch(template_name.to_sym)
-        rescue KeyError
-          raise ConfigurationError, 'You must specify catalog_id OR (catalog_items AND template_name)'
-        end
-        res[:catalog_id] = catalog_id
-      end
-
       res
     end
-
 
     def initialize( args )
       @args = args

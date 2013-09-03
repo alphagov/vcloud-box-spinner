@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'provisioner/cli'
 
 MACHINE_METADATA = {
-  :puppetmaster => 'foo.bar.baz',
+# :puppetmaster => 'foo.bar.baz',
   :zone         => 'foo',
-  :catalog_id   => 'default_catalog_id',
+# :catalog_id   => 'default_catalog_id',
 }.freeze
 
 DEFAULTS = {
@@ -85,29 +85,6 @@ describe Provisioner::CLI do
       res.should include(:ssh_user => 'binky')
     end
 
-    it 'should use catalog_id if present' do
-      options = { :machine_metadata => MACHINE_METADATA.dup.merge!(
-                      :catalog_id => 'wibble',
-                      :catalog_items => { :my_cool_template => 'incorrect' },
-                      :template_name => 'my_cool_template'
-                    ),
-                  :org_config => {}}
-      res = Provisioner::CLI.process(options)
-      res.should include(:catalog_id => 'wibble')
-    end
-
-    it 'should use template_name to determine catalog_id if catalog_id not present' do
-      tpl = MACHINE_METADATA.dup
-      tpl.delete(:catalog_id)
-      tpl.merge!(
-        :catalog_items => { :my_cool_template => 'https://correct_catalog_id' },
-        :template_name => 'my_cool_template'
-      )
-      res = Provisioner::CLI.process({:machine_metadata => tpl,
-                                      :org_config => {}})
-      res.should include(:catalog_id => 'https://correct_catalog_id')
-    end
-
     it 'should require a zone to be set' do
       tpl = MACHINE_METADATA.dup
       tpl.delete(:zone)
@@ -134,25 +111,18 @@ describe Provisioner::CLI do
           :host=>"api-end-host",
           :platform=>"qa",
           :organisation=>"org-name",
-          :catalog_items => {
-            :"template-name" => "https://vendor-api-endpoint/catalogItem/100"
-          }}
+          }
         zone_org_config =
-          { :default_vdc=>"https://vendor-api-endpoint/api/vdc/07412",
-            :domain => "tester.default",
+          { :domain => "tester.default",
             :network_name => "Default",
-            :network_uri => "https://vendor-api-endpoint/api/network/0352",
-            :vdc_id=>"07412" }
+            :vdc_name=>"vdc-name" }
         machine_metadata = { :zone => "tester",
                              :vm_name => "machine-2",
                              :ip => "192.168.2.2" }
         expected_opts = DEFAULTS.merge(default_org_config).
           merge(zone_org_config).
           merge(machine_metadata).
-          merge({ :user => 'badger',
-                  :password => 'eggplant',
-                  :catalog_id => "https://vendor-api-endpoint/catalogItem/100"
-        })
+          merge({ :user => 'badger', :password => 'eggplant' })
 
       VcloudBoxProvisioner.should_receive(:build).
         with(expected_opts).
