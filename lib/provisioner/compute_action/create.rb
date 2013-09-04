@@ -51,6 +51,7 @@ module Provisioner
         guest_customization_section = customization_options[:GuestCustomizationSection]
 
         response = modify_xml(guest_customization_section[:href], guest_customization_section[:type]) do |xml|
+          xml.at_css('Enabled').content = 'true'
           xml.at_css('ComputerName').content = options[:vm_name]
           if xml.at_css('CustomizationScript').nil?
             xml.at_css('ComputerName').before("<CustomizationScript>#{CGI.escapeHTML(user_data)}</CustomizationScript>\n")
@@ -127,13 +128,6 @@ module Provisioner
       end
       private :update_network_connection_options
 
-      def power_on(server)
-        connection = compute.servers.service
-        power_on_uri = server.links.find {|link| link[:rel] == 'power:powerOn' }[:href]
-        connection.request(:uri => power_on_uri, :method => "POST", :expects => 202)
-      end
-      private :power_on
-
       def wait_for_vms_to_appear(server, options)
         180.times.each do |x|
           logger.debug("waiting for vm to spin up...")
@@ -149,17 +143,30 @@ module Provisioner
       end
       private :wait_for_vms_to_appear
 
+      def wait_for_vmware_tools(server)
+        logger.debug("cycling power to identify VMware Tools...")
+
+        server.power_on
+        server.wait_for { server.ready? }
+        server.wait_for(90) { attributes[:children][:RuntimeInfoSection][:VMWareTools] }
+
+        server.undeploy
+        server.wait_for { server.ready? }
+      end
+
       def launch_server name
         super
         server = provision(name, options)
 
         wait_for_vms_to_appear(server, options)
+        wait_for_vmware_tools(server)
 
         update_guest_customization_options(server, options)
         update_network_connection_options(server, options)
         update_machine_resources(server, options)
 
-        power_on(server)
+        server.power_on
+        server.wait_for { server.ready? }
 
         server
       end
