@@ -1,3 +1,8 @@
+0.2.3 2013-09-04
+
+ - Increase spin up wait to 3 minutes.
+ - Cycle power to identify VMware Tools for Guest Customization.
+
 0.2.2 2013-08-13
 
  - Making --setup-script option while create action optional
