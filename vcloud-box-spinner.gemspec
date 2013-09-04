@@ -33,4 +33,5 @@ which enables you to be able to configure VMs with static IPs}
   s.add_runtime_dependency "parallel"
   s.add_runtime_dependency "highline"
   s.add_runtime_dependency "nokogiri", "~> 1.5.0"
+  s.add_runtime_dependency "multi_json"
 end

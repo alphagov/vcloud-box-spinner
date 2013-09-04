@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 require 'optparse'
 require 'provisioner/errors'
 require 'highline/import'
@@ -91,14 +91,14 @@ module Provisioner
 
         options[:org_config] = {}
         o.on("-o", "--org-config", "=ORG-CONFIG-JSON",
-             "The organisation configuration json file path") do |v|
-          options[:org_config] = JSON.parse(File.read(v), :symbolize_names => true)
+             "The organisation configuration JSON file path") do |v|
+          options[:org_config] = MultiJson.load(File.read(v), :symbolize_names => true)
         end
 
         options[:machine_metadata] = {}
         o.on("-m", "--machine-config", "=METADATA",
-             "The machine configuration json file path") do |v|
-          options[:machine_metadata] = JSON.parse(File.read(v), :symbolize_names => true)
+             "The machine configuration JSON file path") do |v|
+          options[:machine_metadata] = MultiJson.load(File.read(v), :symbolize_names => true)
         end
 
         o.on('-s', '--setup-script', "=SETUP-SCRIPT", "path to setup script that should run after machine is brought up") do |v|
