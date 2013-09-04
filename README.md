@@ -18,6 +18,7 @@ You should be able to do `vcloud-box-spinner --help`
 
     e.g. vcloud-box-spinner -u username orgs/staging.json machines/frontend-1.json
 
+        -c, --credential=GROUP           fog credential group
         -u, --user=USERNAME              vCloud username
         -p, --password=PASSWORD          vCloud password
         -F, --ssh-config=FILENAME        SSH config file(s) to use (can be specified multiple times)
@@ -56,6 +57,11 @@ Once you have an org and machine config, you can invoke the provisioner as
 follows:
 
     vcloud-box-spinner -u username -p password org_config.json machine_config.json
+
+## Environment Variables
+
+  - `FOG_RC` specifies the fog credentials file if not `~/.fog`.
+  - `FOG_CREDENTIAL` specifies the credential group if not `default`.
 
 ## Hacking
 

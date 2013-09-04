@@ -76,6 +76,10 @@ module Provisioner
         o.separator ""
         o.separator "[Available options]:"
 
+        o.on("-c", "--credential", "=GROUP", "fog credential group") do |v|
+          options[:credential] = v
+        end
+
         o.on("-u", "--user", "=USERNAME", "vCloud username") do |v|
           options[:user] = v
         end
@@ -128,11 +132,7 @@ module Provisioner
 
         action = @args[0]
 
-        if options[:user].nil? then
-          options[:user] = ask("vCloud username: ")
-        end
-
-        if options[:password].nil? then
+        if options[:user] && options[:password].nil? then
           options[:password] = ask("vCloud password: ") { |q| q.echo = false }
         end
 
