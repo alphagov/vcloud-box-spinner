@@ -6,7 +6,6 @@ module Provisioner
     private :options=, :options
 
     def initialize options
-      options[:provider] = 'vcloud'
       options[:created_by] = ENV['USER']
       self.options = options
     end
@@ -42,17 +41,20 @@ module Provisioner
     private :delete
 
     def compute
-      @compute ||= Fog::Compute.new(
-        :provider           => options[:provider],
-        :vcloud_username    => "#{options[:user]}@#{options[:organisation]}",
-        :vcloud_password    => options[:password],
-        :vcloud_host        => options[:host],
+      opts = {
         :vcloud_default_vdc => options[:default_vdc],
         :connection_options => {
-          :ssl_verify_peer   => false,
           :omit_default_port => true
         }
-      )
+      }
+      if options[:user]
+        opts[:vcloud_username] = "#{options[:user]}@#{options[:organisation]}"
+        opts[:vcloud_password] = options[:password]
+      end
+      opts[:vcloud_host] = options[:host] if options[:host]
+
+      Fog.credential = options[:credential] if options[:credential]
+      @compute ||= Fog::Vcloud::Compute.new(opts)
     end
     private :compute
 
@@ -78,10 +80,6 @@ module Provisioner
     end
 
     def validate_options
-      unless options[:password] && options[:user] && options[:host]
-        logger.error "VCloud credentials missing"
-        raise ConfigurationError, "VCloud credentials must be specified"
-      end
     end
     private :validate_options
 
