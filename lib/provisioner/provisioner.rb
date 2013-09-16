@@ -80,6 +80,10 @@ module Provisioner
     end
 
     def validate_options
+      unless (options[:password] && options[:user] && options[:host]) || options[:credential]
+        logger.error "VCloud credentials missing"
+        raise ConfigurationError, "VCloud credentials must be specified"
+      end
     end
     private :validate_options
 
