@@ -1,3 +1,7 @@
+0.2.5 2013-09-16
+ - Use multi_json gem rather than json
+ - Allow use of fog's credentials file
+
 0.2.4 2013-09-05
 
  - Use fog 1.15.0 for Set-Cookie header fix.
