@@ -2,9 +2,7 @@ require 'spec_helper'
 require 'provisioner/cli'
 
 MACHINE_METADATA = {
-# :puppetmaster => 'foo.bar.baz',
-  :zone         => 'foo',
-# :catalog_id   => 'default_catalog_id',
+  :zone => 'foo',
 }.freeze
 
 DEFAULTS = {
