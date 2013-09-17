@@ -7,8 +7,12 @@ module Provisioner
 
         vapp = provision(name, options)
 
-        # FIXME: enable this...
-        #wait_for_vmware_tools(server)
+        if feature_flag # FIXME not implemented yet
+          vapp.vms.each do |vm|
+            wait_for_vmware_tools(vapp,vm)
+          end
+          vapp.undeploy
+        end
 
         vapp.vms.each do |vm|
           update_guest_customization_options(vm, options)
@@ -28,20 +32,19 @@ module Provisioner
         super
       end
 
-      # Should this be private?
-      # TODO: make this work with vcloud_director
-      #def wait_for_vmware_tools(server)
-      #  logger.debug("cycling power to identify VMware Tools...")
-      #
-      #  server.power_on
-      #  server.wait_for { server.ready? }
-      #  server.wait_for(90) { attributes[:children][:RuntimeInfoSection][:VMWareTools] }
-      #
-      #  server.undeploy
-      #  server.wait_for { server.ready? }
-      #end
-
       private
+
+      def wait_for_vmware_tools(vapp,vm)
+        logger.debug("cycling power to identify VMware Tools...")
+
+        vm.power_on
+
+        # This is a hack; really we should add vmware tools version to
+        # Vm model similarly to customization info. In particular,
+        # using the attributes directly like this assumes one VM per
+        # vApp and will break if there are more than one.
+        vapp.wait_for(90) { attributes[:Children][:Vm][:RuntimeInfoSection][:VMWareTools] }
+      end
 
       def provision(name, options)
         logger.debug "User data for #{name}: #{user_data}"
