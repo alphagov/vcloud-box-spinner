@@ -53,7 +53,9 @@ module Provisioner
         template = catalog.catalog_items.get_by_name(options[:template_name])
         network = org.networks.get_by_name(options[:network_name])
 
-        template.instantiate(options[:vm_name], {:vdc_id => vdc.id, :network_id => network.id}) || abort
+        template.instantiate(vdc, options[:vm_name], {
+          :network_config => {:network => network, :fence_mode => 'bridged'}
+        })
         vdc.vapps.get_by_name(options[:vm_name])
       end
 
