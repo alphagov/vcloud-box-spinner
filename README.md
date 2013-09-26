@@ -1,4 +1,4 @@
-# vCloud Provisioner
+# vCloud Box Spinner
 
 This is a wrapper around the vCloud director API that should allow for easy
 provisioning of VMs.
