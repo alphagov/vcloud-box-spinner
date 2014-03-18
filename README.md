@@ -1,3 +1,5 @@
+This project is no longer under active development. Please take a look at [vCloud Tools](https://github.com/alphagov/vcloud-tools).
+
 # vCloud Box Spinner
 
 This is a wrapper around the vCloud director API that should allow for easy
