@@ -1,7 +1,4 @@
-This project is no longer under active development. It is provided under an MIT licence
-so you are welcome to fork it and amend it for your own needs. However, please note that
-we found an issue with using the Fog vCloud client - in particular we had issues with it
-timing out when provisioning vApps.
+This project is no longer under active development. We had a number of issues with it, in particular with using the Fog vCloud client rather than the vCloud Director client, such as timing out when provisioning vApps.
 
 Please take a look at our new vCloud provisioning project: [vCloud Tools](https://github.com/alphagov/vcloud-tools).
 
