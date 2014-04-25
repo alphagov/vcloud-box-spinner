@@ -1,4 +1,9 @@
-This project is no longer under active development. Please take a look at [vCloud Tools](https://github.com/alphagov/vcloud-tools).
+This project is no longer under active development. It is provided under an MIT licence
+so you are welcome to fork it and amend it for your own needs. However, please note that
+we found an issue with using the Fog vCloud client - in particular we had issues with it
+timing out when provisioning vApps.
+
+Please take a look at our new vCloud provisioning project: [vCloud Tools](https://github.com/alphagov/vcloud-tools).
 
 # vCloud Box Spinner
 
