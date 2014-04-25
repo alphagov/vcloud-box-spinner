@@ -42,19 +42,18 @@ module Provisioner
 
     def compute
       opts = {
-        :vcloud_default_vdc => options[:default_vdc],
         :connection_options => {
           :omit_default_port => true
         }
       }
       if options[:user]
-        opts[:vcloud_username] = "#{options[:user]}@#{options[:organisation]}"
-        opts[:vcloud_password] = options[:password]
+        opts[:vcloud_director_username] = "#{options[:user]}@#{options[:organisation]}"
+        opts[:vcloud_director_password] = options[:password]
       end
-      opts[:vcloud_host] = options[:host] if options[:host]
+      opts[:vcloud_director_host] = options[:host] if options[:host]
 
       Fog.credential = options[:credential] if options[:credential]
-      @compute ||= Fog::Vcloud::Compute.new(opts)
+      @compute ||= Fog::Compute::VcloudDirector.new(opts)
     end
     private :compute
 
